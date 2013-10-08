@@ -16,13 +16,18 @@
  */
 package org.lisapark.octopus;
 
+import com.google.gson.Gson;
 import java.io.PrintStream;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import org.lisapark.octopus.core.ModelBean;
 import org.lisapark.octopus.core.ProcessingModel;
+import org.lisapark.octopus.core.ProcessorBean;
 import org.lisapark.octopus.core.ValidationException;
 import org.lisapark.octopus.core.compiler.esper.EsperCompiler;
 import org.lisapark.octopus.core.parameter.Parameter;
+import org.lisapark.octopus.core.processor.Processor;
 import org.lisapark.octopus.core.runtime.ProcessingRuntime;
 import org.lisapark.octopus.core.sink.external.ExternalSink;
 import org.lisapark.octopus.core.source.external.ExternalSource;
@@ -34,52 +39,79 @@ import org.openide.util.Exceptions;
  */
 public class ModelRunner {
     
+    public static void main(String args[]){
+        
+        ModelRunner runner = new ModelRunner();
+        String string = "Alex. Mylnikov: - 1947/03/02";
+        
+        String canonical = runner.getCanonical(string);
+        
+    }
+    
     private ProcessingModel model;
+    
+    ModelRunner(){
+        
+    }
     
     public ModelRunner(ProcessingModel model){
         this.model = model;        
     }
     
-    public ModelRunner(ProcessingModel model, 
-            Map<String, String> sourceParam, 
-            Map<String, String> sinkParam){
+    // 
+    /**
+     * This constructor serves old version 
+     * 
+     * @param model
+     * @param sourceParam
+     * @param sinkParam 
+     */
+    public ModelRunner(ProcessingModel model, Map sourceParam, Map sinkParam){
         
         this.model = model; 
-        if (sourceParam != null) {
-            Set<ExternalSource> extSources = this.model.getExternalSources();
-            for (ExternalSource extSource : extSources) {
-                Set<Parameter> params = extSource.getParameters();
-                for (Parameter param : params) {
-                    String paramName = param.getName();
-                    if (sourceParam.containsKey(paramName)
-                            && sourceParam.get(paramName) != null) {
-                        try {
-                            param.setValueFromString(sourceParam.get(paramName));
-                        } catch (ValidationException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                }
+        
+        setSourceParams(sourceParam);
+        setSinkParams(sinkParam);
+    }
+    
+    // New version employes the whole model json converted to the ModelBean
+    /**
+     * New version employs the whole model JSON converted to the ModelBean
+     * 
+     * @param model
+     * @param modelBean 
+     */
+    public ModelRunner(ProcessingModel model, ModelBean modelBean){
+        
+        this.model = model; 
+        
+        if (modelBean != null) {
+            
+            // Update source params
+            Set<String> sources = modelBean.getSources();
+
+            for (String proc : sources) {
+                ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
+                setSourceParams(procBean.getParams());
+            }
+
+            //Update sink params
+            Set<String> sinks = modelBean.getSinks();
+
+            for (String proc : sinks) {
+                ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
+                setSinkParams(procBean.getParams());
+            }
+
+            // Update processors params
+            Set<String> procs = modelBean.getProcessors();
+
+            for (String proc : procs) {
+                ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
+                setProcessorParams(procBean.getParams());
             }
         }
         
-        if (sinkParam != null) {
-            Set<ExternalSink> extSinks = this.model.getExternalSinks();
-            for (ExternalSink extSink : extSinks) {
-                Set<Parameter> params = extSink.getParameters();
-                for (Parameter param : params) {
-                    String paramName = param.getName();
-                    if (sinkParam.containsKey(paramName)
-                            && sinkParam.get(paramName) != null) {
-                        try {
-                            param.setValueFromString(sinkParam.get(paramName));
-                        } catch (ValidationException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                }
-            }
-        }
     }
     
     /**
@@ -95,13 +127,122 @@ public class ModelRunner {
             compiler.setStandardError(stream);
             
             try {
+                
                 ProcessingRuntime runtime = compiler.compile(model);
                 
                 runtime.start();
                 runtime.shutdown();
+                
             } catch (ValidationException e1) {
                 System.out.println(e1.getLocalizedMessage() + "\n");
             }
         }
+    }
+
+    //Setters with Map argument
+    //==========================================================================
+    /**
+     * 
+     * @param sourceParam 
+     */
+    private void setSourceParams(Map sourceParams) {
+        if (sourceParams != null) {
+            Set<ExternalSource> extSources = this.model.getExternalSources();
+            for (ExternalSource extSource : extSources) {
+                Set<Parameter> params = extSource.getParameters();
+                for (Parameter param : params) {
+                    // get param name from the ProcessingModel
+                    String paramName = param.getName();
+                    // get corresponding param name from ModelBean
+                    String beanParamName = containsKey(sourceParams, paramName);
+                    if (!beanParamName.isEmpty()) {
+                        try {
+                            param.setValueFromString(sourceParams.get(beanParamName).toString());
+                        } catch (ValidationException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void setProcessorParams(Map processorParams) {
+        if (processorParams != null) {
+            Set<Processor> processors = this.model.getProcessors();
+            for (Processor processor : processors) {
+                Set<Parameter> params = processor.getParameters();
+                for (Parameter param : params) {
+                    // get param name from the ProcessingModel
+                    String paramName = param.getName();
+                    // get corresponding param name from ModelBean
+                    String beanParamName = containsKey(processorParams, paramName);
+                    if (!beanParamName.isEmpty()) {
+                        try {
+                            param.setValueFromString(processorParams.get(beanParamName).toString());
+                        } catch (ValidationException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private void setSinkParams(Map sinkParams) {
+        if (sinkParams != null) {
+            Set<ExternalSink> extSinks = this.model.getExternalSinks();
+            for (ExternalSink extSink : extSinks) {
+                Set<Parameter> params = extSink.getParameters();
+                for (Parameter param : params) {
+                    // get param name from the ProcessingModel
+                    String paramName = param.getName();
+                    // get corresponding param name from ModelBean
+                    String beanParamName = containsKey(sinkParams, paramName);
+                    if (!beanParamName.isEmpty()) {
+                        try {
+                            param.setValueFromString(sinkParams.get(beanParamName).toString());
+                        } catch (ValidationException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Convert strings to the canonical view: only alphanumerical 
+     * @param string
+     * @return 
+     */
+    private String getCanonical(String string){
+        String retString = string.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll(" ", "");
+        return retString.toLowerCase();
+        
+    }
+    
+    /**
+     * Compares two canonical string and returns original name from the map
+     * 
+     * @param map
+     * @param string
+     * @return 
+     */
+    private String containsKey(Map<String, Object> map, String string){
+        
+        String contains = "";
+        
+        for(String entry : map.keySet()){
+            String entryStr = getCanonical(entry);
+            String stringStr = getCanonical(string);
+            if(entryStr.equalsIgnoreCase(stringStr)){
+                contains = entry;
+                break;
+            }
+            
+        }
+        
+        return contains;
     }
 }
