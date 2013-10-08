@@ -31,6 +31,9 @@ public interface OctopusRepository {
     void saveProcessingModel(ProcessingModel model) throws RepositoryException;
 
     List<ProcessingModel> getProcessingModelsByName(String name) throws RepositoryException;
+    
+    List<ProcessingModel> getProcessingModelsByName(String name, String turl,
+            Integer tport, String tuid, String tpsw) throws RepositoryException;
 
     ProcessingModel getProcessingModelByName(String name) throws RepositoryException;
     
