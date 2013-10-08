@@ -219,6 +219,27 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
     }
 
     @Override
+    public synchronized List<ProcessingModel> getProcessingModelsByName(String name, String turl,
+            Integer tport, String tuid, String tpsw) throws RepositoryException {
+
+        checkArgument(name != null, "name cannot be null");
+//        checkArgument(getServer() != null, "server cannot be null");
+
+        
+        ObjectContainer client = Db4oClientServer.openClient(turl, tport, tuid, tpsw);
+
+        final String query = createQuery(name);
+
+        LOG.debug("Getting models like {}", query);
+        
+        List<ProcessingModel> resultSet = getResultSet(client, query);
+        
+        client.close();
+
+        return resultSet;
+    }
+    
+    @Override
     public ProcessingModel getProcessingModelByName(String name) throws RepositoryException {
 
         List<ProcessingModel> models = null;
