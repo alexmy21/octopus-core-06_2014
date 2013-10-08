@@ -19,7 +19,6 @@ package org.lisapark.octopus;
 import com.google.gson.Gson;
 import java.io.PrintStream;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import org.lisapark.octopus.core.ModelBean;
 import org.lisapark.octopus.core.ProcessingModel;
