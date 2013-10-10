@@ -17,14 +17,12 @@
 package org.lisapark.octopus.core.source.external.impl;
 
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
