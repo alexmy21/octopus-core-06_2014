@@ -32,7 +32,7 @@ public interface OctopusRepository {
 
     List<ProcessingModel> getProcessingModelsByName(String name) throws RepositoryException;
     
-    List<ProcessingModel> getProcessingModelsByName(String name, String turl,
+    List<ProcessingModel> getProcessingModelsByNameOnServer(String name, String turl,
             Integer tport, String tuid, String tpsw) throws RepositoryException;
 
     ProcessingModel getProcessingModelByName(String name) throws RepositoryException;

@@ -29,6 +29,7 @@ import com.db4o.ta.DeactivatingRollbackStrategy;
 import com.db4o.ta.TransparentActivationSupport;
 import com.db4o.ta.TransparentPersistenceSupport;
 import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
@@ -170,14 +171,14 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
             int tport, String tuid, String tpsw) throws RepositoryException {
 
         checkArgument(model != null, "model cannot be null");
-        
+
         ObjectContainer client = Db4oClientServer.openClient(
                 turl, tport, tuid, tpsw);
 
         model.setLastSaved(DateTime.now());
 
         try {
-            
+
             LOG.debug("Saving model {}...", model.getModelName());
 
             client.store(model);
@@ -192,7 +193,6 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
     }
 
     //==========================================================================
-    
     @Override
     public synchronized List<ProcessingModel> getProcessingModelsByName(String name) throws RepositoryException {
 
@@ -219,26 +219,38 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
     }
 
     @Override
-    public synchronized List<ProcessingModel> getProcessingModelsByName(String name, String turl,
-            Integer tport, String tuid, String tpsw) throws RepositoryException {
+    public synchronized List<ProcessingModel> getProcessingModelsByNameOnServer(String name, String turl,
+            Integer tport, String tuid, String tpsw) {
+        ObjectContainer client = null;
+        List<ProcessingModel> resultSet = null;
 
-        checkArgument(name != null, "name cannot be null");
-//        checkArgument(getServer() != null, "server cannot be null");
+        try {
+            checkArgument(name != null, "name cannot be null");
 
-        
-        ObjectContainer client = Db4oClientServer.openClient(turl, tport, tuid, tpsw);
+            client = Db4oClientServer.openClient(turl, tport, tuid, tpsw);
 
-        final String query = createQuery(name);
+            final String query = createQuery(name);
 
-        LOG.debug("Getting models like {}", query);
-        
-        List<ProcessingModel> resultSet = getResultSet(client, query);
-        
-        client.close();
+            LOG.debug("Getting models like {}", query);
+
+            resultSet = Lists.newArrayList(getResultSet(client, query));
+
+            client.close();
+
+            return resultSet;
+        } catch (Db4oIOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (RepositoryException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+        }
 
         return resultSet;
     }
-    
+
     @Override
     public ProcessingModel getProcessingModelByName(String name) throws RepositoryException {
 
@@ -568,4 +580,5 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
             throw new RepositoryException(e);
         }
     }
+
 }
