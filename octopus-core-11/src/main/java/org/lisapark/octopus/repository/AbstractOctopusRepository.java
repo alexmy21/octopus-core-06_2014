@@ -67,6 +67,7 @@ import org.lisapark.octopus.core.source.external.impl.Neo4jOptiSource;
 import org.lisapark.octopus.core.source.external.impl.Neo4jProductSource;
 import org.lisapark.octopus.core.source.external.impl.Neo4jSinkContextSource;
 import org.lisapark.octopus.core.source.external.impl.Neo4jTechnologyStepsSource;
+import org.lisapark.octopus.core.source.external.impl.RTCSource;
 import org.lisapark.octopus.core.source.external.impl.RabbitMqSource;
 import org.lisapark.octopus.core.source.external.impl.RedisListSource;
 import org.lisapark.octopus.core.source.external.impl.RedisMessageSource;
@@ -123,6 +124,7 @@ public abstract class AbstractOctopusRepository
                     RedisListSource.newTemplate(),
                     RedisMessageSource.newTemplate(),
                     RedisQuittokenSource.newTemplate(),
+                    RTCSource.newTemplate(),
                     TestSource.newTemplate()});
     }
 
