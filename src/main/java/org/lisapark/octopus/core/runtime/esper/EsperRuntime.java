@@ -177,13 +177,6 @@ public class EsperRuntime implements ProcessingRuntime {
 
                 LOG.error(String.format("Processing exception while draining source [%s]", source), e);
 
-            } catch (Exception e) {
-                // output it to standard error and the LOG
-                standardError.println(e.getLocalizedMessage());
-                e.printStackTrace(standardError);
-
-                LOG.error(String.format("Uncaught exception while draining source [%s]", source), e);
-
             } finally {
                 source.stopProcessingEvents();
             }
