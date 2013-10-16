@@ -99,7 +99,7 @@ public class TestSource extends ExternalSource {
          * Running is declared volatile because it may be access my different threads
          */
         private volatile boolean running;
-        private long SLIEEP_TIME = 10L;
+        private final long SLIEEP_TIME = 10L;
 
         public CompiledTestSource(TestSource source) {
             this.source = source;

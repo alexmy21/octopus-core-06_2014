@@ -31,6 +31,7 @@ import org.lisapark.octopus.core.processor.impl.PearsonsCorrelationProcessor;
 import org.lisapark.octopus.core.processor.impl.PipeDouble;
 import org.lisapark.octopus.core.processor.impl.PipeString;
 import org.lisapark.octopus.core.processor.impl.PipeStringDouble;
+import org.lisapark.octopus.core.processor.impl.RTCcontroller;
 import org.lisapark.octopus.core.processor.impl.Sma;
 import org.lisapark.octopus.core.processor.impl.Subtraction;
 import org.lisapark.octopus.core.processor.impl.Xor;
@@ -144,6 +145,7 @@ public abstract class AbstractOctopusRepository
                     PipeDouble.newTemplate(),
                     PipeString.newTemplate(),
                     PipeStringDouble.newTemplate(),
+                    RTCcontroller.newTemplate(),
                     Sma.newTemplate(),
                     Subtraction.newTemplate()});
     }

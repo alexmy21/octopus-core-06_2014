@@ -27,7 +27,6 @@ import org.lisapark.octopus.core.ValidationException;
 import org.lisapark.octopus.core.event.Event;
 import org.lisapark.octopus.core.event.EventType;
 import org.lisapark.octopus.core.parameter.Parameter;
-import org.lisapark.octopus.core.parameter.Parameter.Builder;
 import org.lisapark.octopus.core.runtime.ProcessingRuntime;
 import org.lisapark.octopus.core.source.external.CompiledExternalSource;
 import org.lisapark.octopus.core.source.external.ExternalSource;
