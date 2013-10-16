@@ -31,6 +31,7 @@ import org.lisapark.octopus.core.parameter.Parameter.Builder;
 import org.lisapark.octopus.core.runtime.ProcessingRuntime;
 import org.lisapark.octopus.core.source.external.CompiledExternalSource;
 import org.lisapark.octopus.core.source.external.ExternalSource;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -84,7 +85,7 @@ public class RTCSource extends ExternalSource {
 
         rtcSource.addParameter(Parameter.stringParameterWithIdAndName(RTC_SIGNAL_NAME_PARAMETER_ID, "Run signal name:")
                 .description("Run signal/token name.")
-                .defaultValue("attr")
+                .defaultValue("start")
                 .required(true));
 
         rtcSource.addParameter(Parameter.booleanParameterWithIdAndName(RTC_SIGNAL_VALUE_PARAMETER_ID, "Run signal value:")
@@ -106,6 +107,7 @@ public class RTCSource extends ExternalSource {
         protected final RTCSource source;
         protected volatile boolean running;
         protected Thread thread;
+        private long SLIEEP_TIME = 100L;
 
         public CompiledRedisSource(RTCSource source) {
             this.source = source;
@@ -113,14 +115,27 @@ public class RTCSource extends ExternalSource {
 
         @Override
         public void startProcessingEvents(ProcessingRuntime runtime) {
-            EventType eventType = this.source.getOutput().getEventType();
-            List attributes = eventType.getAttributes();
+            
+            thread = Thread.currentThread();
+            running = true;
+            
             int numberEventsCreated = 0;
 
             Map attributeData = Maps.newHashMap();
             attributeData.put(this.source.getStartSignalName(), this.source.getStartSignalValue());
 
-            runtime.sendEventFromSource(new Event(attributeData), this.source);
+            while (!thread.isInterrupted() && running && numberEventsCreated < 1) {
+                Event e = new Event(attributeData);
+
+                runtime.sendEventFromSource(e, source);
+                
+                numberEventsCreated++;
+                try {
+                    Thread.sleep(SLIEEP_TIME);
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }            
         }
 
         @Override
