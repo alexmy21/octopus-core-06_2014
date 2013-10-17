@@ -37,6 +37,11 @@ import org.openide.util.Exceptions;
  * @author Alex Mylnikov (alexmy@lisa-park.com)
  */
 public class ModelRunner {
+    
+    public static final String MODEL_NAME = "modelname";
+    public static final String MODEL_JSON = "modeljson";
+
+    private ProcessingModel model;
 
     public static void main(String args[]) {
 
@@ -46,16 +51,18 @@ public class ModelRunner {
         String canonical = runner.getCanonical(string);
 
     }
-    private ProcessingModel model;
 
     ModelRunner() {
     }
 
+    /**
+     * 
+     * @param model 
+     */
     public ModelRunner(ProcessingModel model) {
         this.model = model;
     }
-
-    // 
+ 
     /**
      * This constructor serves old version
      *
@@ -114,12 +121,10 @@ public class ModelRunner {
                 }
             }
         }
-
     }
 
     /**
      *
-     * @param currentProcessingModel
      */
     public void runModel() {
 
