@@ -37,101 +37,105 @@ import org.openide.util.Exceptions;
  * @author Alex Mylnikov (alexmy@lisa-park.com)
  */
 public class ModelRunner {
-    
-    public static void main(String args[]){
-        
+
+    public static void main(String args[]) {
+
         ModelRunner runner = new ModelRunner();
         String string = "Alex. Mylnikov: - 1947/03/02";
-        
+
         String canonical = runner.getCanonical(string);
-        
+
     }
-    
     private ProcessingModel model;
-    
-    ModelRunner(){
-        
+
+    ModelRunner() {
     }
-    
-    public ModelRunner(ProcessingModel model){
-        this.model = model;        
+
+    public ModelRunner(ProcessingModel model) {
+        this.model = model;
     }
-    
+
     // 
     /**
-     * This constructor serves old version 
-     * 
+     * This constructor serves old version
+     *
      * @param model
      * @param sourceParam
-     * @param sinkParam 
+     * @param sinkParam
      */
-    public ModelRunner(ProcessingModel model, Map sourceParam, Map sinkParam){
-        
-        this.model = model; 
-        
+    public ModelRunner(ProcessingModel model, Map sourceParam, Map sinkParam) {
+
+        this.model = model;
+
         setSourceParams(sourceParam);
         setSinkParams(sinkParam);
     }
-    
+
     // New version employes the whole model json converted to the ModelBean
     /**
      * New version employs the whole model JSON converted to the ModelBean
-     * 
+     *
      * @param model
-     * @param modelBean 
+     * @param modelBean
      */
-    public ModelRunner(ProcessingModel model, ModelBean modelBean){
-        
-        this.model = model; 
-        
+    public ModelRunner(ProcessingModel model, ModelBean modelBean) {
+
+        this.model = model;
+
         if (modelBean != null) {
-            
+
             // Update source params
             Set<String> sources = modelBean.getSources();
 
-            for (String proc : sources) {
-                ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
-                setSourceParams(procBean.getParams());
+            if (sources != null) {
+                for (String proc : sources) {
+                    ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
+                    setSourceParams(procBean.getParams());
+                }
             }
 
             //Update sink params
             Set<String> sinks = modelBean.getSinks();
 
-            for (String proc : sinks) {
-                ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
-                setSinkParams(procBean.getParams());
+            if (sinks != null) {
+                for (String proc : sinks) {
+                    ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
+                    setSinkParams(procBean.getParams());
+                }
             }
 
             // Update processors params
             Set<String> procs = modelBean.getProcessors();
 
-            for (String proc : procs) {
-                ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
-                setProcessorParams(procBean.getParams());
+            if (procs != null) {
+                for (String proc : procs) {
+                    ProcessorBean procBean = new Gson().fromJson(proc, ProcessorBean.class);
+                    setProcessorParams(procBean.getParams());
+                }
             }
         }
-        
+
     }
-    
+
     /**
-     * 
-     * @param currentProcessingModel 
+     *
+     * @param currentProcessingModel
      */
     public void runModel() {
-        
+
         if (model != null) {
             org.lisapark.octopus.core.compiler.Compiler compiler = new EsperCompiler();
             PrintStream stream = new PrintStream(System.out);
             compiler.setStandardOut(stream);
             compiler.setStandardError(stream);
-            
+
             try {
-                
+
                 ProcessingRuntime runtime = compiler.compile(model);
-                
+
                 runtime.start();
                 runtime.shutdown();
-                
+
             } catch (ValidationException e1) {
                 System.out.println(e1.getLocalizedMessage() + "\n");
             }
@@ -141,8 +145,8 @@ public class ModelRunner {
     //Setters with Map argument
     //==========================================================================
     /**
-     * 
-     * @param sourceParam 
+     *
+     * @param sourceParam
      */
     private void setSourceParams(Map sourceParams) {
         if (sourceParams != null) {
@@ -187,7 +191,7 @@ public class ModelRunner {
             }
         }
     }
-    
+
     private void setSinkParams(Map sinkParams) {
         if (sinkParams != null) {
             Set<ExternalSink> extSinks = this.model.getExternalSinks();
@@ -209,39 +213,40 @@ public class ModelRunner {
             }
         }
     }
-    
+
     /**
-     * Convert strings to the canonical view: only alphanumerical 
+     * Convert strings to the canonical view: only alphanumerical
+     *
      * @param string
-     * @return 
+     * @return
      */
-    private String getCanonical(String string){
+    private String getCanonical(String string) {
         String retString = string.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll(" ", "");
         return retString.toLowerCase();
-        
+
     }
-    
+
     /**
      * Compares two canonical string and returns original name from the map
-     * 
+     *
      * @param map
      * @param string
-     * @return 
+     * @return
      */
-    private String containsKey(Map<String, Object> map, String string){
-        
+    private String containsKey(Map<String, Object> map, String string) {
+
         String contains = "";
-        
-        for(String entry : map.keySet()){
+
+        for (String entry : map.keySet()) {
             String entryStr = getCanonical(entry);
             String stringStr = getCanonical(string);
-            if(entryStr.equalsIgnoreCase(stringStr)){
+            if (entryStr.equalsIgnoreCase(stringStr)) {
                 contains = entry;
                 break;
             }
-            
+
         }
-        
+
         return contains;
     }
 }
