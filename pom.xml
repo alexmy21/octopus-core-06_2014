@@ -109,6 +109,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </repositories>
 
     <dependencies>
+        
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
