@@ -44,8 +44,14 @@ public class IntegerParameter extends Parameter<Integer> {
 
     @Override
     public Integer parseValueFromString(String stringValue) throws ConversionException {
+        String str = stringValue;
         try {
-            return Integer.parseInt(stringValue);
+            // Check for decimal dot - AM
+            int endIndex = stringValue.indexOf('.');
+            if(endIndex > 0) {
+                str = stringValue.substring(0, endIndex);
+            }
+            return Integer.parseInt(str);
         } catch (NumberFormatException e) {
             throw new ConversionException(String.format("Could not convert %s into a number", stringValue));
         }
