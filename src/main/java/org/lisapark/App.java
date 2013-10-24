@@ -14,16 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lisapark;
-
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
-}
+package org.lisapark;
+
+import org.lisapark.octopus.core.parameter.ConversionException;
+import org.openide.util.Exceptions;
+
+public class App {
+
+    public static void main(String[] args) {
+        
+        int value = 0;
+        try {
+            value = parseValueFromString("12.0");
+        } catch (ConversionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        System.out.println("Hello World!" + value);
+
+    }
+    
+    public static Integer parseValueFromString(String stringValue) throws ConversionException {
+        String str = stringValue;
+        try {
+            // Check for decimal dot - AM
+            int endIndex = stringValue.indexOf('.');
+            if(endIndex > 0) {
+                str = stringValue.substring(0, endIndex);
+            }
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            throw new ConversionException(String.format("Could not convert %s into a number", stringValue));
+        }
+    }
+}

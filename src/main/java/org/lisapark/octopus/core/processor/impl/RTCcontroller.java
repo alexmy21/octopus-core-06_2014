@@ -16,12 +16,10 @@
  */
 package org.lisapark.octopus.core.processor.impl;
 
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -29,7 +27,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.lisapark.octopus.ModelRunner;
@@ -152,7 +149,7 @@ public class RTCcontroller extends Processor<Void> {
 
         rtc.addParameter(Parameter.stringParameterWithIdAndName(MODEL_NAME_FIELD_PARAMETER_ID, "Model List Field Name")
                 .description("Model List field Name that is used to output log data.")
-                .defaultValue("<attribute for model list>")
+                .defaultValue("attribute_for_model_list")
                 .required(true));
 
         // double output
@@ -160,7 +157,7 @@ public class RTCcontroller extends Processor<Void> {
             rtc.setOutput(
                     ProcessorOutput.booleanOutputWithId(OUTPUT_ID).name("Output")
                     .description(DEFAULT_OUTPUT_DESCRIPTION)
-                    .attributeName("RTC-<set id>")
+                    .attributeName("RTC_set_id")
             );
         } catch (ValidationException ex) {
             // this should NOT happen. It means we created the Pipe with an invalid attriubte name
