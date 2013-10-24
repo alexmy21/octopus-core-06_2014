@@ -51,7 +51,8 @@ public class TechnologyRelsNeo4jSrvSink extends AbstractNode implements External
     static final Logger LOG = LoggerFactory.getLogger(TechnologyRelsNeo4jSrvSink.class);
     
     private static final String DEFAULT_NAME = "Create Technology Step Relations";
-    private static final String DEFAULT_DESCRIPTION = "Creates technology steps relations that represent technological process.";
+    private static final String DEFAULT_DESCRIPTION = "Creates technology steps relations that represent"
+            + " technological process.";
     private static final String DEFAULT_INPUT = "Input";    
     
     private static final int NEO4J_URL_PARAMETER_ID         = 1;
