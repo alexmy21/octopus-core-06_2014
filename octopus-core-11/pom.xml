@@ -342,9 +342,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-            <version>1.9</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.3</version>
         </dependency>
     </dependencies>
     <build>
