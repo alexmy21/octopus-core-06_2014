@@ -127,7 +127,7 @@ public class Db4oProcessorsSource extends ExternalSource {
         db4o.addParameter(Parameter.stringParameterWithIdAndName(USER_NAME_PARAMETER_ID, "Db4oUserName"));
         db4o.addParameter(Parameter.stringParameterWithIdAndName(PASSWORD_PARAMETER_ID, "Db4oPassword:"));
         
-        db4o.addParameter(Parameter.integerParameterWithIdAndName(PORT_PARAMETER_ID, "Gb4oPort:")
+        db4o.addParameter(Parameter.integerParameterWithIdAndName(PORT_PARAMETER_ID, "Db4oPort:")
                 .defaultValue(7777)
                 .required(true));
         db4o.addParameter(Parameter.stringParameterWithIdAndName(QUERY_PARAMETER_ID, "Query:")
