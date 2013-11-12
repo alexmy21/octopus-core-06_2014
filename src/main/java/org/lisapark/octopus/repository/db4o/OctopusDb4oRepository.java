@@ -31,9 +31,17 @@ import com.db4o.ta.TransparentPersistenceSupport;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.joda.time.DateTime;
 import org.lisapark.octopus.core.Input;
 import org.lisapark.octopus.core.Output;
@@ -218,6 +226,15 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
         return getResultSet(client, query);
     }
 
+    /**
+     *
+     * @param name
+     * @param turl
+     * @param tport
+     * @param tuid
+     * @param tpsw
+     * @return
+     */
     @Override
     public synchronized List<ProcessingModel> getProcessingModelsByNameOnServer(String name, String turl,
             Integer tport, String tuid, String tpsw) {
@@ -251,6 +268,41 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
         return resultSet;
     }
 
+    /**
+     * 
+     * @param query
+     * @param jurl
+     * @return 
+     */
+    @Override
+    public synchronized List<String> getModelList(String query, String jurl) {
+
+        List<String> _modelList = null;
+                
+        try {
+            HttpClient client = new DefaultHttpClient();
+
+            HttpGet request = new HttpGet(jurl + "?search=" + query);
+            HttpResponse response = client.execute(request);
+
+            // Get the response
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuilder jsonResponse = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonResponse.append(line);
+            }
+
+             _modelList = new Gson().fromJson(jsonResponse.toString(), List.class);
+             
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return _modelList;
+    }
+    
     @Override
     public ProcessingModel getProcessingModelByName(String name) throws RepositoryException {
 
@@ -273,6 +325,21 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
         }
     }
 
+    @Override
+    public ProcessingModel getProcessingModelByName(String name, String turl,
+            Integer tport, String tuid, String tpsw) throws RepositoryException {
+
+        List<ProcessingModel> models = getProcessingModelsByNameOnServer(name, turl, tport, tuid, tpsw);
+
+        if (models == null || models.isEmpty()) {
+            return null;
+        } else {
+            ProcessingModel model = models.get(0);
+            activateModel(model);
+            return model;
+        }
+    }
+    
     public ProcessingModel getProcessingModelByName(ObjectContainer client, String name) throws RepositoryException {
 
         List<ProcessingModel> models = null;
@@ -297,6 +364,7 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
     /**
      *
      * @param model
+     * @return 
      */
     public synchronized ProcessingModel activateModel(ProcessingModel model) {
 
@@ -399,7 +467,7 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
     /**
      * Extracts all external sinks that have name matched with name provided
      *
-     * @param name
+     * @param sinkName
      * @return
      * @throws RepositoryException
      */
