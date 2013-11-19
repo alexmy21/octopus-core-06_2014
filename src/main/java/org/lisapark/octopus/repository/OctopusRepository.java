@@ -38,7 +38,9 @@ public interface OctopusRepository {
     List<ProcessingModel>   getProcessingModelsByNameOnServer(String name, String turl,
             Integer tport, String tuid, String tpsw) throws RepositoryException;
     
-    List<String>            getModelList(String query, String jurl);
+    List<String>            getModelJsonList(String query, String jurl);
+    
+    List<String>            getModelNameList(String query, String jurl);
 
     // Get selected model
     //==========================================================================
