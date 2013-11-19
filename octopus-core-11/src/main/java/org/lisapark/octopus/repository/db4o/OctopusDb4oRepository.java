@@ -44,6 +44,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.joda.time.DateTime;
 import org.lisapark.octopus.core.Input;
+import org.lisapark.octopus.core.ModelBean;
 import org.lisapark.octopus.core.Output;
 import org.lisapark.octopus.core.ProcessingModel;
 import org.lisapark.octopus.core.processor.Processor;
@@ -275,7 +276,7 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
      * @return 
      */
     @Override
-    public synchronized List<String> getModelList(String query, String jurl) {
+    public synchronized List<String> getModelJsonList(String query, String jurl) {
 
         List<String> _modelList = null;
                 
@@ -302,6 +303,20 @@ public class OctopusDb4oRepository extends AbstractOctopusRepository implements 
 
         return _modelList;
     }
+    
+    
+    @Override
+    public List<String> getModelNameList(String query, String jurl) {
+        List<String> modelNameList = Lists.newArrayList();
+        List<String> jsonList = getModelJsonList(query, jurl);
+        
+        for(String json: jsonList){
+            ModelBean modelBean = new Gson().fromJson(json, ModelBean.class);
+            modelNameList.add(modelBean.getModelName());
+        }
+        return modelNameList;
+    }
+
     
     @Override
     public ProcessingModel getProcessingModelByName(String name) throws RepositoryException {
