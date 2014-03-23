@@ -60,7 +60,9 @@ public class RedisPubSink extends AbstractNode
     private static final int ATTRIBUTE_LIST_PARAMETER_ID = 8;
     
     private static final String ATTRIBUTE_LIST = "Attribute List";
-    private static final String ATTRIBUTE_LIST_DESCRIPTION = "List of comma separated attributes that go to Resin Publisher Server. If list is empty, all attributes go to Resin Publisher Server.";
+    private static final String ATTRIBUTE_LIST_DESCRIPTION = "List of comma separated "
+            + "attributes that go to Redis Publisher Server. If list is empty,"
+            + " all attributes go to Redis Publisher Server.";
     private Input<Event> input;
 
     private RedisPubSink(UUID id, String name, String description) {
@@ -143,7 +145,7 @@ public class RedisPubSink extends AbstractNode
 
         UUID sinkId = UUID.randomUUID();
 
-        RedisPubSink redisSink = new RedisPubSink(sinkId, "Resin Pub sink", "Works as a Resin Publisher.");
+        RedisPubSink redisSink = new RedisPubSink(sinkId, "Redis Pub sink", "Works as a Redis Publisher.");
 
         redisSink.addParameter(Parameter.stringParameterWithIdAndName(1, "User Name:")
                 .description("User name.")
@@ -181,8 +183,8 @@ public class RedisPubSink extends AbstractNode
                 .required(true));
 
         redisSink.addParameter(Parameter.stringParameterWithIdAndName(8, "Attribute List")
-                .description("List of comma separated attributes that go to Resin Publisher Server."
-                + " If list is empty, all attributes go to Resin Publisher Server."));
+                .description("List of comma separated attributes that go to Redis Publisher Server."
+                + " If list is empty, all attributes go to Redis Publisher Server."));
 
         return redisSink;
     }

@@ -17,7 +17,6 @@
 package org.lisapark.octopus.core.source.external.impl;
 
 import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
 import com.db4o.cs.Db4oClientServer;
 import static com.google.common.base.Preconditions.checkState;
 import com.google.common.collect.Lists;
