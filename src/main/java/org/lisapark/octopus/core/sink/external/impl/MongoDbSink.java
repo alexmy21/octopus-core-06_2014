@@ -23,11 +23,13 @@ package org.lisapark.octopus.core.sink.external.impl;
 //import com.mongodb.Mongo;
 //import com.mongodb.MongoException;
 import com.google.common.collect.ImmutableList;
+import com.mongodb.DB;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import net.karmafiles.ff.core.tool.dbutil.converter.Converter;
 import org.lisapark.octopus.core.AbstractNode;
 import org.lisapark.octopus.core.Input;
 import org.lisapark.octopus.core.ValidationException;
@@ -45,12 +47,12 @@ import org.openide.util.Exceptions;
  */
 public class MongoDbSink  extends AbstractNode implements ExternalSink {
     private static final String DEFAULT_NAME = "MongoDb";
-    private static final String DEFAULT_DESCRIPTION = "MongoDb Output";
+    private static final String DEFAULT_DESCRIPTION = "MongoDb Sink";
     private static final String DEFAULT_INPUT = "Input";    
     
     private static final int ATTRIBUTE_URL_PARAMETER_ID = 1;
     private static final String ATTRIBUTE_URL = "MongoDb URL";
-    private static final String ATTRIBUTE_URL_DESCRIPTION = "Show Mongo Db URL";
+    private static final String ATTRIBUTE_URL_DESCRIPTION = "Show MongoDb URL";
 
     private Input<Event> input;
 
@@ -71,11 +73,6 @@ public class MongoDbSink  extends AbstractNode implements ExternalSink {
         this.input = copyFromNode.input.copyOf();
     }
     
-    @SuppressWarnings("unchecked")
-    public void setUrl(String url) throws ValidationException {
-        getParameter(ATTRIBUTE_URL_PARAMETER_ID).setValue(url);
-    }
-
     public String getUrl() {
         return getParameter(ATTRIBUTE_URL_PARAMETER_ID).getValueAsString();
     }
@@ -142,22 +139,22 @@ public class MongoDbSink  extends AbstractNode implements ExternalSink {
         public synchronized void processEvent(SinkContext ctx, Map<Integer, Event> eventsByInputId) {
             Event event = eventsByInputId.get(1);
             if (event != null) {
-//
-//                Mongo mongoDb;
-//                try {
-//                    mongoDb = new Mongo("localhost", 27017);
-//                    DB db = mongoDb.getDB("octopus");
-//                    DBCollection coll = db.getCollection("octopus");
+
+                Mongo mongoDb;
+                try {
+                    mongoDb = new Mongo("localhost", 27017);
+                    DB db = mongoDb.getDB("octopus");
+//                    DBCollection coll = db.getCollection(mongoDbSink.);
 //                    coll.drop();
 //
 //                    DBObject dbObject = Converter.toDBObject(event);
 //                    coll.save(dbObject);
-//
-//                } catch (UnknownHostException ex) {
-//                    Exceptions.printStackTrace(ex);
-//                } catch (MongoException ex) {
-//                    Exceptions.printStackTrace(ex);
-//                }
+
+                } catch (UnknownHostException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (MongoException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
 
             } else {
                 ctx.getStandardOut().println("event is null");

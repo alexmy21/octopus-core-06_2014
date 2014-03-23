@@ -59,6 +59,7 @@ import org.lisapark.octopus.core.source.external.impl.Db4oProcessorsSource;
 import org.lisapark.octopus.core.source.external.impl.Db4oReplicaSource;
 import org.lisapark.octopus.core.source.external.impl.Db4oSinksSource;
 import org.lisapark.octopus.core.source.external.impl.Db4oSourcesSource;
+import org.lisapark.octopus.core.source.external.impl.GdeltZipSource;
 import org.lisapark.octopus.core.source.external.impl.GssListSourceQuery;
 import org.lisapark.octopus.core.source.external.impl.GssListSourceRange;
 import org.lisapark.octopus.core.source.external.impl.HtmlTableSource;
@@ -76,6 +77,7 @@ import org.lisapark.octopus.core.source.external.impl.RedisQuittokenSource;
 import org.lisapark.octopus.core.source.external.impl.SimppGssSource;
 import org.lisapark.octopus.core.source.external.impl.SqlQuerySource;
 import org.lisapark.octopus.core.source.external.impl.TestSource;
+import org.lisapark.octopus.core.source.external.impl.WebFileSource;
 
 public abstract class AbstractOctopusRepository
         implements OctopusRepository {
@@ -126,7 +128,10 @@ public abstract class AbstractOctopusRepository
                     RedisMessageSource.newTemplate(),
                     RedisQuittokenSource.newTemplate(),
                     RTCSource.newTemplate(),
-                    TestSource.newTemplate()});
+                    TestSource.newTemplate(),
+                    WebFileSource.newTemplate(),
+                    GdeltZipSource.newTemplate()
+        });
     }
 
     @Override

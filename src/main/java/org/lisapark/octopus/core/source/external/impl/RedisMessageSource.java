@@ -126,7 +126,9 @@ public class RedisMessageSource extends ExternalSource {
 
         redisSource.addParameter(Parameter.integerParameterWithIdAndName(7, "Time out:").description("Time out in seconds.").defaultValue(Integer.valueOf(30)).required(true));
 
-        redisSource.addParameter(Parameter.stringParameterWithIdAndName(8, "Quit signal token:").description("Quit signal token.").defaultValue("quit").required(true));
+        redisSource.addParameter(Parameter.stringParameterWithIdAndName(8, "Quit signal token:")
+                .description("Quit signal token.")
+                .defaultValue("quit").required(true));
 
         return redisSource;
     }
@@ -164,7 +166,10 @@ public class RedisMessageSource extends ExternalSource {
                 RedisMessageListenerContainer container = new RedisMessageListenerContainer();
                 container.setConnectionFactory(cf);
 
-                container.addMessageListener(new MessageListenerAdapter(new RedisMessageListener(container, this.source, runtime, this.source.getQuitSignal(), latch)), new ChannelTopic(channel));
+                container.addMessageListener(new MessageListenerAdapter(
+                        new RedisMessageListener(container, this.source, runtime, this.source.getQuitSignal(), 
+                                latch)), 
+                        new ChannelTopic(channel));
 
                 container.afterPropertiesSet();
 
