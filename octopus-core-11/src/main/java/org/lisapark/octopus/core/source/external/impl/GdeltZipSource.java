@@ -209,7 +209,6 @@ public class GdeltZipSource extends ExternalSource {
             }
 
             EventType eventType = source.getOutput().getEventType();
-            List<Attribute> attributes = eventType.getAttributes();
 
             Integer readLimit = source.getReadLimit();
             String fileName = source.getFileName();
@@ -268,10 +267,9 @@ public class GdeltZipSource extends ExternalSource {
             running = false;
         }
 
-        private Event createEventFromLine(String line, EventType eventType) {
+        private synchronized Event createEventFromLine(String line, EventType eventType) {
 
             String[] fields = line.split("\\t");
-            Map<String, Object> fieldMap = Maps.newHashMap();
 
             Map<String, Object> attributeValues = Maps.newHashMap();
 

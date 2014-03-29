@@ -160,7 +160,7 @@ public class GssListSourceRange extends ExternalSource {
                 .required(true));
 
 
-        gssSource.setOutput(Output.outputWithId(1).setName("Output data"));
+        gssSource.setOutput(Output.outputWithId(1).setName("Output"));
 
         return gssSource;
     }
