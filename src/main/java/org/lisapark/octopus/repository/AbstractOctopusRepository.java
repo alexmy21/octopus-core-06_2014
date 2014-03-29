@@ -45,6 +45,7 @@ import org.lisapark.octopus.core.sink.external.impl.MachineRels2Neo4jSrvSink;
 import org.lisapark.octopus.core.sink.external.impl.MachineResources2Neo4jSrvSink;
 import org.lisapark.octopus.core.sink.external.impl.ModelJson2Neo4jEmbSink;
 import org.lisapark.octopus.core.sink.external.impl.ModelJson2Neo4jSrvSink;
+import org.lisapark.octopus.core.sink.external.impl.MongoDbSink;
 import org.lisapark.octopus.core.sink.external.impl.ProcessorJson2Neo4jSrvSink;
 import org.lisapark.octopus.core.sink.external.impl.ProductRels2Neo4jSrvSink;
 import org.lisapark.octopus.core.sink.external.impl.Products2Neo4jSrvSink;
@@ -64,6 +65,7 @@ import org.lisapark.octopus.core.source.external.impl.GssListSourceQuery;
 import org.lisapark.octopus.core.source.external.impl.GssListSourceRange;
 import org.lisapark.octopus.core.source.external.impl.HtmlTableSource;
 import org.lisapark.octopus.core.source.external.impl.KickStarterSource;
+import org.lisapark.octopus.core.source.external.impl.MongoDbSource;
 import org.lisapark.octopus.core.source.external.impl.Neo4jMachineResourceSource;
 import org.lisapark.octopus.core.source.external.impl.Neo4jOptiSource;
 import org.lisapark.octopus.core.source.external.impl.Neo4jProductSource;
@@ -86,51 +88,54 @@ public abstract class AbstractOctopusRepository
     public List<ExternalSink> getAllExternalSinkTemplates() {
         return Lists.newArrayList(new ExternalSink[]{
                     ConsoleSink.newTemplate(),
-                    RabbitMqSink.newTemplate(),
-                    RedisPubSink.newTemplate(),
-                    RedisPubQuitSink.newTemplate(),
+                    ChocoSimppGssSink.newTemplate(),                    
                     DatabaseSink.newTemplate(),
                     GssSink.newTemplate(),
                     ForecastGssSink.newTemplate(),
-                    ChocoSimppGssSink.newTemplate(),
+                    MachineResources2Neo4jSrvSink.newTemplate(),
+                    MachineRels2Neo4jSrvSink.newTemplate(),
+                    ModelJson2Neo4jSrvSink.newTemplate(),
+                    ModelJson2Neo4jEmbSink.newTemplate(),
+                    MongoDbSink.newTemplate(),
+                    RabbitMqSink.newTemplate(),
+                    RedisPubSink.newTemplate(),
+                    RedisPubQuitSink.newTemplate(),
                     ProcessorJson2Neo4jSrvSink.newTemplate(),
                     Products2Neo4jSrvSink.newTemplate(),
                     ProductRels2Neo4jSrvSink.newTemplate(),
-                    MachineResources2Neo4jSrvSink.newTemplate(),
-                    MachineRels2Neo4jSrvSink.newTemplate(),
                     TechnologySteps2Neo4jSrvSink.newTemplate(),
                     TechnologyRelsNeo4jSrvSink.newTemplate(),
-                    ModelJson2Neo4jSrvSink.newTemplate(),
-                    ModelJson2Neo4jEmbSink.newTemplate()});
+                    });
     }
 
     @Override
     public List<ExternalSource> getAllExternalSourceTemplates() {
         return Lists.newArrayList(new ExternalSource[]{
-                    KickStarterSource.newTemplate(),
-                    RabbitMqSource.newTemplate(),
-                    HtmlTableSource.newTemplate(),
-                    GssListSourceRange.newTemplate(),
-                    GssListSourceQuery.newTemplate(),
-                    SimppGssSource.newTemplate(),
-                    SqlQuerySource.newTemplate(),
                     Db4oModelsSource.newTemplate(),
                     Db4oSourcesSource.newTemplate(),
                     Db4oSinksSource.newTemplate(),
                     Db4oProcessorsSource.newTemplate(),
                     Db4oReplicaSource.newTemplate(),
+                    KickStarterSource.newTemplate(),
+                    GdeltZipSource.newTemplate(),
+                    GssListSourceRange.newTemplate(),
+                    GssListSourceQuery.newTemplate(),
+                    HtmlTableSource.newTemplate(),
+                    MongoDbSource.newTemplate(),
                     Neo4jMachineResourceSource.newTemplate(),
+                    Neo4jOptiSource.newTemplate(),
                     Neo4jProductSource.newTemplate(),
                     Neo4jSinkContextSource.newTemplate(),
                     Neo4jTechnologyStepsSource.newTemplate(),
-                    Neo4jOptiSource.newTemplate(),
+                    RabbitMqSource.newTemplate(),
                     RedisListSource.newTemplate(),
                     RedisMessageSource.newTemplate(),
                     RedisQuittokenSource.newTemplate(),
                     RTCSource.newTemplate(),
+                    SimppGssSource.newTemplate(),                    
+                    SqlQuerySource.newTemplate(),
                     TestSource.newTemplate(),
-                    WebFileSource.newTemplate(),
-                    GdeltZipSource.newTemplate()
+                    WebFileSource.newTemplate()
         });
     }
 
@@ -139,19 +144,19 @@ public abstract class AbstractOctopusRepository
         return Lists.newArrayList(new Processor[]{
                     Addition.newTemplate(),
                     And.newTemplate(),
-                    Or.newTemplate(),
-                    Xor.newTemplate(),
                     Crossing.newTemplate(),
-                    ForecastSRM.newTemplate(),
                     Division.newTemplate(),
+                    ForecastSRM.newTemplate(),
                     LinearRegressionProcessor.newTemplate(),
                     Multiplication.newTemplate(),
+                    Or.newTemplate(),
                     PearsonsCorrelationProcessor.newTemplate(),
                     PipeDouble.newTemplate(),
                     PipeString.newTemplate(),
                     PipeStringDouble.newTemplate(),
                     RTCcontroller.newTemplate(),
                     Sma.newTemplate(),
-                    Subtraction.newTemplate()});
+                    Subtraction.newTemplate(),
+                    Xor.newTemplate()});
     }
 }
