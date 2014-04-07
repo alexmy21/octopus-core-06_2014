@@ -40,6 +40,7 @@ import org.lisapark.octopus.core.sink.external.impl.ChocoSimppGssSink;
 import org.lisapark.octopus.core.sink.external.impl.ConsoleSink;
 import org.lisapark.octopus.core.sink.external.impl.DatabaseSink;
 import org.lisapark.octopus.core.sink.external.impl.ForecastGssSink;
+import org.lisapark.octopus.core.sink.external.impl.Gdelt2Neo4jSink;
 import org.lisapark.octopus.core.sink.external.impl.GssSink;
 import org.lisapark.octopus.core.sink.external.impl.MachineRels2Neo4jSrvSink;
 import org.lisapark.octopus.core.sink.external.impl.MachineResources2Neo4jSrvSink;
@@ -90,6 +91,7 @@ public abstract class AbstractOctopusRepository
                     ConsoleSink.newTemplate(),
                     ChocoSimppGssSink.newTemplate(),                    
                     DatabaseSink.newTemplate(),
+                    Gdelt2Neo4jSink.newTemplate(),
                     GssSink.newTemplate(),
                     ForecastGssSink.newTemplate(),
                     MachineResources2Neo4jSrvSink.newTemplate(),
