@@ -389,7 +389,7 @@ public class MongoDbSource extends ExternalSource {
                     if (objValue != null && !objValue.toString().trim().isEmpty()) {
                         if (objValue instanceof Double) {
                             value = (int) (Double.parseDouble(objValue.toString()));
-                        } else if (objValue instanceof Double) {
+                        } else if (objValue instanceof Float) {
                             value = (int) (Float.parseFloat(objValue.toString()));
                         } else {
                             value = Integer.parseInt(objValue.toString());
