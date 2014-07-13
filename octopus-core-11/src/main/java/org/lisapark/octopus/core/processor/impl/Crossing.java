@@ -45,7 +45,7 @@ import org.lisapark.octopus.util.Pair;
  * This {@link Processor} is used to determine if two SMAs are crossed.
  * <p/>
  *
- * @author dave sinclair(david.sinclair@lisa-park.com)
+ * @author Alex Vskmybrjd(alexmy@lisa-park.com)
  */
 @Persistable
 public class Crossing extends Processor<Pair> {
